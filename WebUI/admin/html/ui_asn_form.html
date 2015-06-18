@@ -1,0 +1,179 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_asn_form" method="post" action="">
+    <table class="tableForm" width="100%">
+        <tr hidden="hidden">
+            <th>
+                SKUID:
+            </th>
+            <td>
+                <input type="text" name="ui_asn_skubrcd" id="ui_asn_skubrcd" class="easyui-validatebox"
+                    data-options="required:false" autocomplete="off" readonly="true"  />
+            </td>
+        </tr>
+        <tr hidden="hidden">
+            <th>
+                spl_asn_hdr_pk:
+            </th>
+            <td>
+                <input type="text" name="ui_asn_hdr_pk" id="ui_asn_hdr_pk" class="easyui-validatebox"
+                    data-options="required:false" autocomplete="off" readonly="true"  />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                ASN号：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_asnid" id="ui_asn_asnid" class="easyui-validatebox"
+                    data-options="required:false" autocomplete="off" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                品规：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_sku" id="ui_asn_sku" class="easyui-validatebox"
+                    data-options="required:false" autocomplete="off" readonly="true" style="width:300px" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                预报数量：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_ord_qty" id="ui_asn_ord_qty" class="easyui-validatebox"
+                    data-options="required:false" autocomplete="off" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                到货数量：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_shp_qty" id="ui_asn_shp_qty" class="easyui-numberbox"
+                    data-options="required:true" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                实收数量：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_rcv_qty" id="ui_asn_rcv_qty" class="easyui-numberbox"
+                    data-options="required:true"  />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                拒收数量：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_rjt_qty" id="ui_asn_rjt_qty" class="easyui-numberbox"
+                    data-options="required:false"  />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                拒收原因：
+            </th>
+            <td>
+                <select name="ui_asn_reject" id="ui_asn_reject" class="easyui-combobox" style="width:150px;" data-options="valueField:'REJECT_PK',textField:'REJECT_NAME'" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                问题商品数量：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_prob_qty" id="ui_asn_prob_qty" class="easyui-numberbox"
+                    data-options="required:false"  />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                问题商品原因：
+            </th>
+            <td>
+                <select name="ui_asn_problem" id="ui_asn_problem" class="easyui-combobox" style="width:150px;" data-options="valueField:'PROBLEM_PK',textField:'PROBLEM_NAME'" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                承运商：
+            </th>
+            <td>
+                <select name="ui_asn_party" id="ui_asn_party" class="easyui-combobox" style="width:150px;" data-options="valueField:'PARTY_PK',textField:'PARTY_NAME'" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                运输方式：
+            </th>
+            <td>
+                <select name="ui_asn_shptype" id="ui_asn_shptype" class="easyui-combobox" style="width:150px;" data-options="
+		valueField: 'label',
+		textField: 'value',
+		data: [{
+			label: '汽运',
+			value: '汽运'
+		},{
+			label: '空运',
+			value: '空运'
+		},{
+			label: '铁路',
+			value: '铁路'
+		},{
+			label: '海运',
+			value: '海运'
+		}]"
+                     />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                车牌号：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_carnbr" id="ui_asn_carnbr" class="easyui-validatebox"
+                    data-options="required:false"  />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                到货温度：
+            </th>
+            <td>
+                <input type="text" name="ui_asn_rcvtemp" id="ui_asn_rcvtemp" class="easyui-numberbox" precision="2" 
+                    data-options="required:false" />
+            </td>
+        </tr>
+        
+        <tr>
+            <th>
+                启运时间：</th>
+            <td>
+                <input  name="ui_asn_startdate" id="ui_asn_startdate" class="easyui-datetimebox" 
+                    showSeconds="false" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                到货时间： </th>
+            <td>
+                <input  name="ui_asn_enddate" id="ui_asn_enddate" class="easyui-datetimebox" required
+                    showSeconds="false"  />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="3" cols="30" name="ui_asn_memo" id="ui_asn_memo"></textarea>
+            </td>
+        </tr>
+     
+    </table>
+    </form>
+</div>

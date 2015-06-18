@@ -1,0 +1,321 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=asn&pagename=ui_asn",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_asn_dg").datagrid({       //初始化datagrid
+                            url: "ashx/bg_wms_asn.ashx?action=getall",
+                          //  striped: true,
+                            rownumbers: true,
+                         //   pagination: true,
+                          //  pageSize: 20,
+                          //  idField: 'ID',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                           // sortName: 'AddDate',
+                          //  sortOrder: 'desc',
+                            //pageList: [20, 40, 60, 80, 100],
+                            showFooter: true,
+                            singleSelect:true,
+                            frozenColumns: [[
+                                             { field: 'ck', checkbox: true },
+                           //                  {
+                           //                      width: 170,
+                           //                      title: '操作',
+                          //                       field: 'ID',
+                           //                      formatter: function (value, rec) {
+                           //                          //var btn = '<a class="pkt_print" onclick="" href="html/pkt_report.aspx?pkt_nbr='+rec.PKT_CTRL_NBR +'">PKT打印</a><a class="yj_print" onclick="" href="javascript:void(0)">药检打印</a>';
+                           ////                          var btn = '<a class="pkt_print" onclick="javascript:pkt_print()" href="#">PKT打印</a><a class="yj_print" onclick="" href="javascript:void(0)">药检打印</a>';
+                           //                          return btn;
+                            //                     }
+                                                 
+                                                 
+                            //                 },
+                                             {
+                                                 width: 130,
+                                                 title: 'ASN号',
+                                                 field: 'SHPMT_NBR',
+                                                 sortable: true
+
+                                             },
+                                             {
+                                                 field: 'SKU_DESC', title: '品规', width: 250
+
+                                             },
+                                             ]],
+                            columns: [[
+                                       
+                                       { field: 'BATCH_NBR', title: '批号', width: 80
+                                           
+                                       },
+                                       
+                                       { field: 'STD_PACK_QTY', title: '件包装数', sortable: true, width: 50 },
+                                       { field: 'UNITS_SHPD', title: '下单数量', sortable: true, width: 80 },
+                                       { field: 'UNITS_RCVD', title: '收货数量', sortable: true, width: 80 },
+                                       { field: 'PACK_QTY', title: '件数', sortable: true, width: 60 },
+                                       { field: 'CREATE_DATE_TIME', title: '下单时间', sortable: true, width: 130 },
+                                       { field: 'FIRST_RCPT_DATE_TIME', title: '收货时间', sortable: true, width: 130 },
+                                       { field: 'MADE_DATE', title: '生产日期', sortable: true, width: 130 },
+                                       { field: 'XPIRE_DATE', title: '有效日期', sortable: true, width: 130 },
+                                       { field: 'REJECT_REMARK', title: '备注', sortable: false,width: 130 },
+                                       { field: 'UNITS_TOTAL_SHPD', title: '总单数量', sortable: false, hidden: true },
+                                       { field: 'SKU_BRCD', title: 'SKUID', hidden: true },
+                                       { field: 'SPL_ASN_HDR_PK', title: '台账ID', hidden: true },
+                                        { field: 'PARTY_CARRIER', title: '承运商ID', hidden: true },
+                                        { field: 'REJECT_PK', title: '拒收ID', hidden: true },
+                                        
+
+                                       
+                                       ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            onLoadSuccess: function (data) {
+                                $('.pkt_print').linkbutton({ text: 'PKT打印', plain: true, iconCls: 'icon-page_white_text' });
+                                $('.yj_print').linkbutton({ text: '药检打印', plain: true, iconCls: 'icon-picture' });
+                                if (data.rows.length > 0) {
+                                    //调用mergeCellsByField()合并单元格
+                                    mergeCellsByField("ui_asn_dg", "SHPMT_NBR");
+                                }
+                            }
+                            
+                        });
+                    }
+                    else {
+                        $("#ui_asn_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_asn_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_asn_searchdata();
+            }
+        })
+    });
+
+    function ui_asn_asnprint()
+    {
+        var row = $("#ui_asn_dg").datagrid("getChecked");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要打印的ASN");
+            return;
+        }
+        else {
+            var tmp = window.open("about:blank", "", "fullscreen=1");
+            //$("#ui_asn_dg").datagrid("uncheckAll");
+            //tmp.moveTo(0, 0);
+            //tmp.resizeTo(screen.width, screen.height);
+            //tmp.focus();
+            tmp.location = "html/asn_report.aspx?asn_nbr=" + row[0].SHPMT_NBR;
+
+        }
+    }
+ 
+   
+    
+    function ui_asn_searchdata() {
+        $("#ui_asn_dg").datagrid('load', {
+            ui_asn_asnnbr: $('#ui_asn_search').find('[name=ui_asn_asnnbr]').val(),
+            ui_asn_season: $('#ui_asn_search').find('[name=ui_asn_season]').val(),
+            ui_asn_batch: $('#ui_asn_search').find('[name=ui_asn_batch]').val(),
+            ui_asn_adddatestart: $('#ui_asn_adddatestart').datetimebox('getValue'),
+            ui_asn_adddateend: $('#ui_asn_adddateend').datetimebox('getValue'),
+            ui_asn_createdatestart: $('#ui_asn_createdatestart').datetimebox('getValue'),
+            ui_asn_createdateend: $('#ui_asn_createdateend').datetimebox('getValue')
+        });
+        $("#ui_asn_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_asn_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_asn_cleardata() {
+        $('#ui_asn_search input').val('');
+        $('#ui_asn_search select').val('select');
+        $('#ui_asn_adddatestart').datetimebox('setValue', '');
+        $('#ui_asn_adddateend').datetimebox('setValue', '');
+        $('#ui_asn_createdatestart').datetimebox('setValue', '');
+        $('#ui_asn_createdateend').datetimebox('setValue', '');
+        $("#ui_asn_dg").datagrid('load', {});
+        $("#ui_asn_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_asn_layout').layout('collapse', 'east');    //隐藏
+    }
+
+    function ui_asn_asninput() {
+        var row = $("#ui_asn_dg").datagrid("getChecked");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要录入收货台账的ASN");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量添加");
+            $("#ui_user_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_asn_add_dialog",
+            href: "html/ui_asn_form.html",
+            title: "录入收货台账",
+            height: 550,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_asn_add_btn",
+                text: '添 加',
+                handler: function () {
+                    //$.show_warning("ok", "submit");
+                    $("#ui_asn_form").form("submit", {
+                        url: "ashx/bg_wms_asn.ashx",
+                        onSubmit: function (param) {
+                            // $.show_warning("ok", "submit111");
+                            $('#ui_asn_add_btn').linkbutton('disable');    //点击就禁用按钮，防止连击
+                            param.action = 'add';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_asn_add_btn').linkbutton('enable');   //恢复按钮
+                                //$.show_warning("fail", "fail on submit");
+                                return false;
+                            }
+                        },
+
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_asn_add_dialog").dialog('destroy'); //销毁dialog对象
+                                $.show_warning("提示", " " + dataJson.result);
+                                //$("#ui_asn_dg").datagrid("reload");
+                            } else {
+                                $('#ui_asn_add_btn').linkbutton('enable');   //恢复按钮
+                                $.show_warning("提示", " "+dataJson.result);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#ui_ui_asn_shp_qty").focus();
+                $("#ui_asn_sku").val(row[0].SKU_DESC);
+                $("#ui_asn_ord_qty").val(row[0].UNITS_TOTAL_SHPD);
+                $("#ui_asn_asnid").val(row[0].SHPMT_NBR);
+                $("#ui_asn_shp_qty").numberbox('setValue', row[0].UNITS_TOTAL_SHPD);
+                $("#ui_asn_rcv_qty").numberbox('setValue', row[0].UNITS_TOTAL_SHPD);
+                $("#ui_asn_rjt_qty").numberbox('setValue', 0);
+                $("#ui_asn_reject").combobox('reload', 'ashx/bg_combobox.ashx?action=get_reject_data');
+                $("#ui_asn_prob_qty").numberbox('setValue', 0);
+                $("#ui_asn_problem").combobox('reload', 'ashx/bg_combobox.ashx?action=get_problem_data');
+                $("#ui_asn_problem").combobox('setValue', 0);
+                $("#ui_asn_party").combobox('reload', 'ashx/bg_combobox.ashx?action=get_party_data');
+                $("#ui_asn_reject").combobox('setValue', '0');
+                $("#ui_asn_party").combobox('setValue', '142');
+                $("#ui_asn_shptype").combobox('setValue', '汽运');
+                //$("#ui_asn_enddate").datetimebox('setValue', CurentTime());
+                $("#ui_asn_startdate").datetimebox('setValue', '1900-01-01 00:00:00');
+                $("#ui_asn_enddate").datetimebox('setValue', row[0].FIRST_RCPT_DATE_TIME);
+                $("#ui_asn_memo").val("");
+                $("#ui_asn_skubrcd").val(row[0].SKU_BRCD);
+            },
+            onClose: function () {
+                $("#ui_asn_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+</script>
+<div id="ui_asn_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_asn_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        ASN号：
+                    </th>
+                    <td>
+                        <input name="ui_asn_asnnbr" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        货主：
+                    </th>
+                    <td>
+                        <input name="ui_asn_season" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        批号：
+                    </th>
+                    <td>
+                        <input name="ui_asn_batch" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+              
+                <tr>
+                    <th>
+                        收货时间：
+                    </th>
+                    <td>
+                        <input name="ui_asn_adddatestart" id="ui_asn_adddatestart" class="easyui-datetimebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        至：
+                    </th>
+                    <td>
+                        <input name="ui_asn_adddateend" id="ui_asn_adddateend" class="easyui-datetimebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        下单时间：
+                    </th>
+                    <td>
+                        <input name="ui_asn_createdatestart" id="ui_asn_createdatestart" class="easyui-datetimebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        至：
+                    </th>
+                    <td>
+                        <input name="ui_asn_createdateend" id="ui_asn_createdateend" class="easyui-datetimebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_asn_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_asn_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_asn_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

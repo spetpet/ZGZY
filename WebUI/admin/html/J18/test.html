@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+</head>
+<body>
+<script type="text/javascript" src="html/J18/d3.v2.min.js"></script>
+<script type="text/javascript" src="html/J18/d3.floorplan.min.js"></script>
+<style type="text/css">
+	
+	//@import url('html/J18/d3.floorplan-t.css');
+	
+	body {
+	  font-size: 14px;
+	  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	  margin: 50px auto 20px;
+	  width: 1000px;
+	  background: #fcfcfc;
+	  line-height: 1.45em;
+	}
+	a {
+	  color: #555;
+	}
+	a:hover {
+	  color: #000;
+	}
+	ul {
+	  margin: 0 20px;
+	  padding: 0;
+	}
+	div.code {
+		border: 1px solid #ccc;
+		background: #eee;
+		margin: 10px 0 10px 0;
+		padding: 10px;
+		width: 1000px;
+	}
+
+/* map menu controls */
+.ui-active rect {fill: #212121}
+.ui-active text {fill: #fff}
+.ui-default rect {fill: #e6e6e6}
+.ui-default text {fill: #000}
+
+/* heatmap colors (courtesy of colorbrewer2.org) */
+
+
+
+.RdYlBu .d6-4 {fill:#CB181D;background:#CB181D;color:#121212}
+.RdYlBu .d6-3 {fill:#FB6A4A;background:#FB6A4A;color:#121212}
+.RdYlBu .d6-2 {fill:#FCAE91;background:#FCAE91;color:#121212}
+.RdYlBu .d6-1 {fill:#FEE5D9;background:#FEE5D9;color:#121212}
+
+/* overlays */
+.polygon {stroke:white;stroke-width:2px;fill-opacity:0.2}
+.vertex {stroke:lime;stroke-width:2px;fill:none}
+
+/* vector field */
+.vector {stroke-width:1px;stroke:lightsteelblue}
+
+/* path plot */
+.pathplot path {stroke-width:2px;stroke:steelblue}
+.planned {stroke-dasharray:9, 5}
+
+
+
+</style>
+
+<div id="demo"></div>
+
+<script id="demo-code" type="text/javascript">
+var xscale = d3.scale.linear()
+               .domain([0,70.0])
+               .range([0,1000]),
+    yscale = d3.scale.linear()
+               .domain([0,33.79])
+               .range([0,500]),
+    map = d3.floorplan().xScale(xscale).yScale(yscale),
+    imagelayer = d3.floorplan.imagelayer(),
+    heatmap = d3.floorplan.heatmap(),
+    //vectorfield = d3.floorplan.vectorfield(),
+    //pathplot = d3.floorplan.pathplot(),
+    //overlays = d3.floorplan.overlays().editMode(true),
+    mapdata = {};
+
+heatmap.colorMode("quantized");
+
+
+mapdata[imagelayer.id()] = [{
+    url: 'html/J18/j18-1f.jpg',
+    x: 0,
+    y: 0,
+    height: 33.79,
+    width: 70.0
+     }];
+
+map.addLayer(imagelayer)
+   .addLayer(heatmap)
+   //.addLayer(vectorfield)
+   //.addLayer(pathplot)
+  // .addLayer(overlays);
+
+d3.json("ashx/bg_locn_coordinate.ashx?action=getall", function (data) {
+
+	
+mapdata[heatmap.id()] = data.heatmap;
+	//mapdata[overlays.id()] = data.overlays;
+	//mapdata[vectorfield.id()] = data.vectorfield;
+	//mapdata[pathplot.id()] = data.pathplot;
+	
+	d3.select("#demo").append("svg")
+		.attr("height", 500).attr("width",1000)
+		.datum(mapdata).call(map);
+});
+</script>
+
+
+</body>
+</html>

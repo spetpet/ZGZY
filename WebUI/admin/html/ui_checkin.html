@@ -1,0 +1,183 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=checkin&pagename=ui_checkin",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_checkin_dg").datagrid({       //初始化datagrid
+                            url: "ashx/bg_checkin.ashx?action=getall",
+                            //  striped: true,
+                            rownumbers: true,
+                            //   pagination: true,
+                            //  pageSize: 20,
+                            //  idField: 'ID',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            // sortName: 'AddDate',
+                            //  sortOrder: 'desc',
+                            //pageList: [20, 40, 60, 80, 100],
+                            showFooter: true,
+                            singleSelect: true,
+                            frozenColumns: [[
+                                             { field: 'ck', checkbox: true },
+                           //                  {
+                           //                      width: 170,
+                           //                      title: '操作',
+                          //                       field: 'ID',
+                           //                      formatter: function (value, rec) {
+                           //                          //var btn = '<a class="pkt_print" onclick="" href="html/pkt_report.aspx?pkt_nbr='+rec.PKT_CTRL_NBR +'">PKT打印</a><a class="yj_print" onclick="" href="javascript:void(0)">药检打印</a>';
+                           ////                          var btn = '<a class="pkt_print" onclick="javascript:pkt_print()" href="#">PKT打印</a><a class="yj_print" onclick="" href="javascript:void(0)">药检打印</a>';
+                           //                          return btn;
+                            //                     }
+
+
+                            //                 },
+                                             {
+                                                 width: 100,
+                                                 title: '工号',
+                                                 field: 'user_id',
+                                                 sortable: true
+
+                                             },
+                                             {
+                                                 width: 100,
+                                                 title: '姓名',
+                                                 field: 'UserName',
+                                                 sortable: true
+
+                                             },
+                                             {
+                                                 width: 120,
+                                                 title: '签到时间',
+                                                 field: 'sign_date_time',
+                                                 sortable: true
+
+                                             }]],
+                            columns: [[
+                                       {
+                                           field: 'memo', title: '签到备注', width: 250
+
+                                       }
+                                       
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar   //请求回来的当前用户可以操作的按钮
+                            
+
+                        });
+                    }
+                    else {
+                        $("#ui_checkin_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_checkin_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_checkin_searchdata();
+            }
+        })
+    });
+
+    
+
+  
+
+
+
+    function ui_checkin_searchdata() {
+        $("#ui_checkin_dg").datagrid('load', {
+            ui_checkin_user: $('#ui_checkin_search').find('[name=ui_checkin_user]').val(),
+            ui_checkin_content: $('#ui_checkin_search').find('[name=ui_checkin_content]').val(),
+            ui_checkin_adddatestart: $('#ui_checkin_adddatestart').datetimebox('getValue'),
+            ui_checkin_adddateend: $('#ui_checkin_adddateend').datetimebox('getValue')
+        });
+        $("#ui_check_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_pkt_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_checkin_cleardata() {
+        $('#ui_checkin_search input').val('');
+        $('#ui_checkin_search select').val('select');
+        $('#ui_checkin_adddatestart').datetimebox('setValue', '');
+        $('#ui_checkin_adddateend').datetimebox('setValue', '');
+        $("#ui_checkin_dg").datagrid('load', {});
+        $("#ui_checkin_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_pkt_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+<div id="ui_checkin_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:false" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_checkin_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        姓名：
+                    </th>
+                    <td>
+                        <input name="ui_checkin_user" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        备注：
+                    </th>
+                    <td>
+                        <input name="ui_checkin_content" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                
+              
+                <tr>
+                    <th>
+                        签到时间：
+                    </th>
+                    <td>
+                        <input name="ui_checkin_adddatestart" id="ui_checkin_adddatestart" class="easyui-datetimebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        至：
+                    </th>
+                    <td>
+                        <input name="ui_checkin_adddateend" id="ui_checkin_adddateend" class="easyui-datetimebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_checkin_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_checkin_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_checkin_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

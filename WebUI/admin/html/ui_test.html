@@ -1,0 +1,100 @@
+﻿		<script type="text/javascript">
+
+
+		    
+            $(function () {
+
+		       
+
+		        var colors = Highcharts.getOptions().colors,
+                    categories = ['一楼库存构成', '二楼库存构成', '三楼库存构成', ],
+                    name = 'Browser brands';
+		        $.ajax({
+		            url: "ashx/bg_wms_charts.ashx?action=get_realtime_inv", type: "post", dataType: "json", timeout: 5000,
+		            success: function (json_result) { var data = json_result; console.log(data);}
+		        });
+                 //   data = $.ajax({ url: "ashx/bg_wms_charts.ashx?action=get_realtime_inv", type: "post", dataType: "json", timeout: 5000 });
+               // $.get("ashx/bg_wms_charts.ashx?action=get_realtime_inv",function(json_result){data=json_result});
+                //data = [{ y: 2222, color: colors[0], drilldown: { name: '一楼库存构成', categories: ["B2"], data: [2222], color: colors[0] } }, { y: 943, color: colors[1], drilldown: { name: '二楼库存构成', categories: ["B1", "BT", "WS", "WS"], data: [625, 2, 14, 302], color: colors[1] } }, { y: 372, color: colors[2], drilldown: { name: '三楼库存构成', categories: ["B1", "SW", "SW", "SW", "WS", "WS"], data: [55, 308, 1, 2, 3, 3], color: colors[2] } }]
+
+
+		        // Build the data arrays
+		        var browserData = [];
+		        var versionsData = [];
+		        for (var i = 0; i < data.length; i++) {
+
+		            // add browser data
+		            browserData.push({
+		                name: categories[i],
+		                y: data[i].y,
+		                color: data[i].color
+		            });
+
+		            // add version data
+		            for (var j = 0; j < data[i].drilldown.data.length; j++) {
+		                var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5;
+		                versionsData.push({
+		                    name: data[i].drilldown.categories[j],
+		                    y: data[i].drilldown.data[j],
+		                    color: Highcharts.Color(data[i].color).brighten(brightness).get()
+		                });
+		            }
+		        }
+
+		        // Create the chart
+		        $('#container').highcharts({
+		            chart: {
+		                type: 'pie'
+		            },
+		            title: {
+		                text: 'Browser market share, April, 2011'
+		            },
+		            yAxis: {
+		                title: {
+		                    text: 'Total percent market share'
+		                }
+		            },
+		            plotOptions: {
+		                pie: {
+		                    shadow: false,
+		                    center: ['50%', '50%']
+		                }
+		            },
+		            tooltip: {
+		                valueSuffix: '%'
+		            },
+		            series: [{
+		                name: 'Browsers',
+		                data: browserData,
+		                size: '60%',
+		                dataLabels: {
+		                    formatter: function () {
+		                        return this.y > 5 ? this.point.name : null;
+		                    },
+		                    color: 'white',
+		                    distance: -30
+		                }
+		            }, {
+		                name: 'Versions',
+		                data: versionsData,
+		                size: '80%',
+		                innerSize: '60%',
+		                dataLabels: {
+		                    formatter: function () {
+		                        // display only if larger than 1
+		                        return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
+		                    }
+		                }
+		            }]
+		        });
+		    });
+
+
+		</script>
+
+
+<div id="ui_test_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'center',border:false">
+        <div id="container" style="width: 600px; height: 400px; margin: 0 auto"></div>
+    </div>
+</div>

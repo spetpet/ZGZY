@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MAModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MAModelStoreContainer">
+          <EntitySet Name="YH_LOCN" EntityType="MAModel.Store.YH_LOCN" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="YH_LOCN">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="SYSDATE" Type="date" />
+          <Property Name="WHSE" Type="varchar" MaxLength="12" />
+          <Property Name="ZONE" Type="varchar" MaxLength="16" />
+          <Property Name="LOCN_CLASS" Type="varchar" MaxLength="4" />
+          <Property Name="LOCN_BRCD" Type="varchar" MaxLength="40" />
+          <Property Name="SEASON" Type="varchar" MaxLength="8" />
+          <Property Name="HZ" Type="varchar" MaxLength="400" />
+          <Property Name="SKU_ID" Type="varchar" MaxLength="40" />
+          <Property Name="SIZE_DESC" Type="varchar" MaxLength="15" />
+          <Property Name="SKU_BRCD" Type="varchar" MaxLength="80" />
+          <Property Name="SKU_DESC" Type="varchar" MaxLength="320" />
+          <Property Name="COLOR" Type="varchar" MaxLength="16" />
+          <Property Name="STD_PACK_QTY" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="UOM" Type="varchar" MaxLength="400" />
+          <Property Name="生产厂家" Type="varchar" MaxLength="740" />
+          <Property Name="C_APPR_CODE" Type="varchar" MaxLength="200" />
+          <Property Name="C_QSTD" Type="varchar" MaxLength="200" />
+          <Property Name="CC" Type="varchar" MaxLength="400" />
+          <Property Name="BATCH_NBR" Type="varchar" MaxLength="120" />
+          <Property Name="ACTL_INVN_QTY" Type="float" />
+          <Property Name="XPIRE_DATE" Type="date" />
+          <Property Name="剂型" Type="varchar" MaxLength="400" />
+          <Property Name="IMPORT" Type="varchar" MaxLength="400" />
+          <Property Name="SPL_INSTR_CODE_9" Type="varchar" MaxLength="20" />
+          <Property Name="SPL_INSTR_CODE_10" Type="varchar" MaxLength="20" />
+          <Property Name="C_DATE" Type="varchar" MaxLength="8" />
+          <Property Name="CREATE_DATE_TIME" Type="date" />
+          <Property Name="ROWNUM_ORDER" Type="float" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MAModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="MAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="YH_LOCN" EntityType="MAModel.YH_LOCN" />
+        </EntityContainer>
+        <EntityType Name="YH_LOCN">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="SYSDATE" Type="DateTime" Precision="0" />
+          <Property Name="WHSE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="ZONE" Type="String" MaxLength="16" Unicode="false" FixedLength="false" />
+          <Property Name="LOCN_CLASS" Type="String" MaxLength="4" Unicode="false" FixedLength="false" />
+          <Property Name="LOCN_BRCD" Type="String" MaxLength="40" Unicode="false" FixedLength="false" />
+          <Property Name="SEASON" Type="String" MaxLength="8" Unicode="false" FixedLength="false" />
+          <Property Name="HZ" Type="String" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="SKU_ID" Type="String" MaxLength="40" Unicode="false" FixedLength="false" />
+          <Property Name="SIZE_DESC" Type="String" MaxLength="15" Unicode="false" FixedLength="false" />
+          <Property Name="SKU_BRCD" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
+          <Property Name="SKU_DESC" Type="String" MaxLength="320" Unicode="false" FixedLength="false" />
+          <Property Name="COLOR" Type="String" MaxLength="16" Unicode="false" FixedLength="false" />
+          <Property Name="STD_PACK_QTY" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="UOM" Type="String" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="生产厂家" Type="String" MaxLength="740" Unicode="false" FixedLength="false" />
+          <Property Name="C_APPR_CODE" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
+          <Property Name="C_QSTD" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
+          <Property Name="CC" Type="String" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="BATCH_NBR" Type="String" MaxLength="120" Unicode="false" FixedLength="false" />
+          <Property Name="ACTL_INVN_QTY" Type="Double" />
+          <Property Name="XPIRE_DATE" Type="DateTime" Precision="0" />
+          <Property Name="剂型" Type="String" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="IMPORT" Type="String" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="SPL_INSTR_CODE_9" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="SPL_INSTR_CODE_10" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="C_DATE" Type="String" MaxLength="8" Unicode="false" FixedLength="false" />
+          <Property Name="CREATE_DATE_TIME" Type="DateTime" Precision="0" />
+          <Property Name="ROWNUM_ORDER" Type="Double" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MAModelStoreContainer" CdmEntityContainer="MAEntities">
+          <EntitySetMapping Name="YH_LOCN">
+            <EntityTypeMapping TypeName="MAModel.YH_LOCN">
+              <MappingFragment StoreEntitySet="YH_LOCN">
+                <ScalarProperty Name="SYSDATE" ColumnName="SYSDATE" />
+                <ScalarProperty Name="WHSE" ColumnName="WHSE" />
+                <ScalarProperty Name="ZONE" ColumnName="ZONE" />
+                <ScalarProperty Name="LOCN_CLASS" ColumnName="LOCN_CLASS" />
+                <ScalarProperty Name="LOCN_BRCD" ColumnName="LOCN_BRCD" />
+                <ScalarProperty Name="SEASON" ColumnName="SEASON" />
+                <ScalarProperty Name="HZ" ColumnName="HZ" />
+                <ScalarProperty Name="SKU_ID" ColumnName="SKU_ID" />
+                <ScalarProperty Name="SIZE_DESC" ColumnName="SIZE_DESC" />
+                <ScalarProperty Name="SKU_BRCD" ColumnName="SKU_BRCD" />
+                <ScalarProperty Name="SKU_DESC" ColumnName="SKU_DESC" />
+                <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+                <ScalarProperty Name="STD_PACK_QTY" ColumnName="STD_PACK_QTY" />
+                <ScalarProperty Name="UOM" ColumnName="UOM" />
+                <ScalarProperty Name="生产厂家" ColumnName="生产厂家" />
+                <ScalarProperty Name="C_APPR_CODE" ColumnName="C_APPR_CODE" />
+                <ScalarProperty Name="C_QSTD" ColumnName="C_QSTD" />
+                <ScalarProperty Name="CC" ColumnName="CC" />
+                <ScalarProperty Name="BATCH_NBR" ColumnName="BATCH_NBR" />
+                <ScalarProperty Name="ACTL_INVN_QTY" ColumnName="ACTL_INVN_QTY" />
+                <ScalarProperty Name="XPIRE_DATE" ColumnName="XPIRE_DATE" />
+                <ScalarProperty Name="剂型" ColumnName="剂型" />
+                <ScalarProperty Name="IMPORT" ColumnName="IMPORT" />
+                <ScalarProperty Name="SPL_INSTR_CODE_9" ColumnName="SPL_INSTR_CODE_9" />
+                <ScalarProperty Name="SPL_INSTR_CODE_10" ColumnName="SPL_INSTR_CODE_10" />
+                <ScalarProperty Name="C_DATE" ColumnName="C_DATE" />
+                <ScalarProperty Name="CREATE_DATE_TIME" ColumnName="CREATE_DATE_TIME" />
+                <ScalarProperty Name="ROWNUM_ORDER" ColumnName="ROWNUM_ORDER" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

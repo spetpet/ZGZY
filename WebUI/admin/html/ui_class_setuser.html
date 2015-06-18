@@ -1,0 +1,34 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_class_setuserform" method="post" action="">
+    <table class="tableForm" width="100%">
+        <tr>
+            <th>
+                培训内容：
+            </th>
+            <td>
+                <input type="hidden" id="ui_class_setuser_classid" name="ui_class_setuser_classid" />
+                <input type="text" id="ui_class_setuser_classname" name="ui_class_setuser_classname" style="width: 170px;"
+                    disabled="disabled" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                培训参与者：
+            </th>
+            <td>
+                <input class="easyui-combotree" id="ui_class_setuser_user" name="ui_class_setuser_user"
+                    style="width: 180px;" 
+                    data-options="
+                    url: 'ashx/bg_classuser.ashx?action=getusercombo',
+                    onlyLeafCheck:true,
+                    multiple:true,
+                    lines:true"
+                      />
+                <img style="cursor: pointer; vertical-align: middle;" onclick="$('#ui_class_setuser_class').combotree('clear');"
+                    alt="清空用户" title="清空用户" src="themes/icon/edit-clear.png" />
+            </td>
+        </tr>
+    </table>
+    </form>
+   
+</div>

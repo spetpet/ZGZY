@@ -1,0 +1,100 @@
+﻿
+<div style="padding: 15px; overflow: hidden">
+    <form id="ui_class_classaddform" method="post" action="">
+    <table class="tableForm" width="100%">
+        <tr>
+            <th>
+                课程名称：
+            </th>
+            <td>
+                <input type="text" name="ui_class_classname_add" id="ui_class_classname_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                课程地点：
+            </th>
+            <td>
+                <input type="text" name="ui_class_classaddress_add" id="ui_class_classaddress_add" class="easyui-validatebox" data-options="required:true"
+                    autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                授课人：
+            </th>
+            <td>
+                <input type="text" name="ui_class_teacher_edit" id="ui_class_teacher_edit" class="easyui-validatebox" data-options="required:false"
+                    autocomplete="off" />
+            </td>
+        </tr>
+         <tr>
+            <th>
+                课程类型：
+            </th>
+            <td>
+                <input type="text" name="ui_class_classkind_add" id="ui_class_classkind_add" class="easyui-validatebox" data-options="required:false"
+                    autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                考核类型：
+            </th>
+            <td>
+                <select name="ui_class_checktype_edit" id="ui_class_checktype_edit" class="easyui-combobox" style="width:150px;" data-options="
+		valueField: 'label',
+		textField: 'value',
+		data: [{
+			label: '实操',
+			value: '实操'
+		},{
+			label: '笔试',
+			value: '笔试'
+		},{
+			label: '免试',
+			value: '免试'
+		}]"
+                     />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                课程开始时间：</th>
+            <td>
+                <input  name="ui_class_classstartdate_add" id="ui_class_classstartdate_add" class="easyui-datetimebox"  showSeconds="false"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                课程结束时间： </th>
+            <td>
+                <input  name="ui_class_classfinishdate_add" id="ui_class_classfinishdate_add" class="easyui-datetimebox" showSeconds="false" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                简介：
+            </th>
+            <td>
+                <textarea rows="3" cols="30" name="ui_class_classabout_add"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                教材：
+            </th>
+            <td>
+                
+                <input type="file" name="uploadify" id="uploadify" />
+                <div id="fileQueue"></div>
+                <input type="text" name="ui_class_uploadfile" id="ui_class_uploadfile" class="easyui-textbox" data-options="required:false" readonly="true"
+                      />
+    
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+

@@ -1,0 +1,15 @@
+﻿<form id="classprintfrm" runat="server">
+<h2>Basic Window</h2>
+<div class="classprint">
+
+    <div id="dd" title="My Dialog"  class="easyui-window" title="打印报表" closed="true" style="width:900px;height:700px;padding:0px;"></div> 
+
+
+        <script>
+          
+            $('#dd').append("<iframe src='html/userclassreport.aspx' style=\"width:800px;height:600px;padding:0px;\" ></iframe>");
+                $('#dd').window('open');
+
+            
+        </script>
+  

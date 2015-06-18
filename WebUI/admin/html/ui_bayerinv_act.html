@@ -1,0 +1,154 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=bayerinvact&pagename=ui_bayerinv_act",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_inv_dg").datagrid({       //初始化datagrid
+                            url: "ashx/bg_wms_inv.ashx?action=getbayer_act",//  striped: true,
+                            rownumbers: true,
+                          showFooter: true,
+                            singleSelect:true,
+                            columns: [[
+                                             //{ field: 'ck', checkbox: true },
+                          
+                                             {width: 30,title: '货主',field: 'SEASON',sortable: true },
+                                             { width: 70, title: '商品编码', field: 'SIZE_DESC', sortable: true },
+                                             { field: 'LOCN_BRCD', title: '库位', width: 70 },
+                                            //{ field: 'CASE_NBR', title: '托盘号', width: 70 },
+                                            { field: 'SKU_DESC', title: '品名规格', width: 180 },
+                                            { field: 'COMMODITY', title: '生产厂家', width: 70 },
+                                            { field: 'PACK_QTY', title: '包装', width: 40 },
+                                            { field: 'DW', title: '单位', width: 30 },
+
+                            
+                                       
+                                       { field: 'MISC_INSTR_CODE_1', title: '生产日期', sortable: true, width: 70 },
+                                       { field: 'XPIRE_DATE', title: '有效日期', sortable: true, width: 70 },
+                                       { field: 'BATCH_NBR', title: '批号', width: 70 },
+                                       //{ field: 'JS', title: '件数', width: 40 },
+                                       { field: 'XS', title: '数量', width: 60 },
+                                       { field: 'MEMO', title: '备注', width: 70 },
+                                       ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            
+                            onLoadSuccess:function(data){
+                                if(data.total>0)return;
+                                $('#ui_inv_dg').datagrid('appendRow', {
+                                    'SKU_DESC': '没有相关记录'
+                                });
+                            }
+                            
+                        });
+                    }
+                    else {
+                        $("#ui_inv_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_inv_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_inv_searchdata();
+            }
+        })
+    });
+
+    
+ 
+   
+    
+    function ui_inv_searchdata() {
+        $('#ui_inv_dg').datagrid('loadData', { total: 0, rows: [] });
+        $("#ui_inv_dg").datagrid('load', {
+            ui_inv_skudesc: $('#ui_inv_search').find('[name=ui_inv_skudesc]').val(),
+            ui_inv_season: $('#ui_inv_search').find('[name=ui_inv_season]').val(),
+            ui_inv_batch: $('#ui_inv_search').find('[name=ui_inv_batch]').val()
+            
+        });
+        $("#ui_inv_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_inv_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_inv_cleardata() {
+        $('#ui_inv_search input').val('');
+        $('#ui_inv_search select').val('select');
+        
+        $("#ui_inv_dg").datagrid('load', {});
+        $("#ui_inv_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_inv_layout').layout('collapse', 'east');    //隐藏
+    }
+
+    //导出按钮
+    function ui_bayerinv_act_export() {
+        Export($('#ui_inv_search').find('[name=ui_inv_season]').val() + '零拣区盘点表', $('#ui_inv_dg'));
+    }
+</script>
+<div id="ui_inv_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:false" title="多条件过滤"
+        style="width: 240px;">
+        <div id="ui_inv_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        品规：
+                    </th>
+                    <td>
+                        <input name="ui_inv_skudesc" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        货主：
+                    </th>
+                    <td>
+                        <input name="ui_inv_season" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        批号：
+                    </th>
+                    <td>
+                        <input name="ui_inv_batch" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+              
+                
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_inv_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_inv_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_inv_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+      
+</div>

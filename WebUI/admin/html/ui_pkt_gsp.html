@@ -1,0 +1,196 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=gsp&pagename=ui_gsp",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_pkt_gsp_dg").datagrid({       //初始化datagrid
+                            url: "ashx/bg_pkt_gsp.ashx?action=getall",//  striped: true,
+                            rownumbers: true,
+                            showFooter: true,
+                            singleSelect: true,
+                            frozenColumns: [[
+                                             { field: 'ck', checkbox: true },
+
+                                             { width: 90, title: 'PKT号', field: 'PKT', sortable: true },
+                                             { width: 90, title: '原始单号', field: 'FTSR_NBR', sortable: true },
+                                             
+                            ]],
+                            columns: [[
+                                       { field: 'ZYS', title: '整件应扫', sortable: true, width: 70 },
+                                       { field: 'LYS', title: '零头应扫', sortable: true, width: 70 },
+                                       { field: 'YIS', title: '已扫数量', sortable: true, width: 70 },
+                                       { field: 'WS', title: '未扫数量', sortable: true, width: 70 },
+                                       
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            onClickRow: function (rowindex, rowdata) {
+                                oldSelectClassId = "";
+                                if (oldSelectClassId == rowdata.Id) {  //点选的是相同的行就不再请求数据
+                                    return;
+                                }
+                                oldSelectClassId = rowdata.Id;   //赋值
+
+                                var $ui_pkt_gsp_layout = $("#ui_pkt_gsp_layout");
+                                var eastGSPClass = $ui_pkt_gsp_layout.layout("panel", "east");
+
+                                if (eastGSPClass.panel("options").collapsed) {   //判断是否展开
+                                    $ui_pkt_gsp_layout.layout("expand", "east");
+                                }
+                                eastGSPClass.panel("setTitle", "出库箱详情");
+
+
+                                $("#ui_pkt_gsp_carton_dg").datagrid({       //初始化datagrid
+
+                                    url: "ashx/bg_pkt_gsp.ashx?action=by_pktctlnbr&pkt_ctrl_nbr=" + rowdata.PKT ,
+                                    rownumbers: true,
+
+                                });
+
+                            },
+                            onLoadSuccess: function (data) {
+                                if (data.total > 0) return;
+                                $('#ui_pkt_gsp_dg').datagrid('appendRow', {
+                                    'PKT': '没有相关记录'
+                                });
+                            }
+
+                        });
+                    }
+                    else {
+                        $("#ui_pkt_gsp_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_inv_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_gsp_searchdata();
+            }
+        })
+
+        $('#ui_gsp_cld').calendar({
+            onSelect: function (date) {
+                $("#ui_pkt_gsp_dg").datagrid('load', {
+                    
+                    //ui_pkt_createdate: date.getFullYear() + "-" + change_length(date.getMonth() + 1) + "-" + change_length(date.getDate())
+                    ui_pkt_createdate: date.getFullYear() + "-" + change_length(date.getMonth() + 1) + "-" + change_length(date.getDate())
+                });
+                //alert(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate());
+            }
+    })
+
+
+
+    });
+
+
+    function change_length(d){
+        if (d.toString().length == 1) {dd = 0 + "" + d.toString();}
+        else {dd = d.toString();}
+        return dd;
+    }
+
+
+    function ui_gsp_searchdata() {
+        $('#ui_pkt_gsp_dg').datagrid('loadData', { total: 0, rows: [] });
+        $("#ui_pkt_gsp_dg").datagrid('load', {
+            ui_gsp_pktctlnbr: $('#ui_gsp_search').find('[name=ui_gsp_pktctlnbr]').val(),
+            ui_gsp_pktnbr: $('#ui_gsp_search').find('[name=ui_gsp_pktnbr]').val()
+            
+
+        });
+        $("#ui_pkt_gsp_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_pkt_gsp_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_gsp_cleardata() {
+        $('#ui_gsp_search input').val('');
+        $('#ui_gsp_search select').val('select');
+
+        $("#ui_pkt_gsp_dg").datagrid('load', {});
+        $("#ui_pkt_gsp_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_pkt_gsp_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+<div id="ui_pkt_gsp_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'west',split:true,border:true,collapsed:false" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_gsp_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        PKT号：
+                    </th>
+                    <td>
+                        <input name="ui_gsp_pktctlnbr" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        原始单号：
+                    </th>
+                    <td>
+                        <input name="ui_gsp_pktnbr" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                
+              
+                
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_gsp_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_gsp_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        选择日期：
+                    </th>
+                </tr>
+            </table>
+            <div id="ui_gsp_cld" class="easyui-calendar" style="width:270px;height:250px;"></div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_pkt_gsp_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+      <div data-options="region:'east',split:true,border:true,collapsed:true" title="出库箱详情"
+        style="width: 330px;">
+        <table id="ui_pkt_gsp_carton_dg" data-options="fit:true,border:false">
+             <thead>
+                <tr>
+                <th field="CARTON_NBR" width="100" >出库箱号</th>
+                <th field="TO_BE_SCAN" width="50" >应扫数量</th>
+                <th field="SCANED" width="50" >已扫数量</th>
+                
+                
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
