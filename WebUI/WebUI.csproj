@@ -137,6 +137,7 @@
     <Content Include="admin\html\ui_yh.html" />
     <Content Include="admin\html\ui_bayerinv.html" />
     <Content Include="admin\html\ui_bayerinv_act.html" />
+    <Content Include="admin\html\yj_new_batch.aspx" />
     <Content Include="admin\images\favicon.ico" />
     <Content Include="admin\index.html" />
     <Content Include="admin\js\common.js" />
@@ -1903,6 +1904,13 @@
     </Compile>
     <Compile Include="admin\html\ui_invchart.aspx.designer.cs">
       <DependentUpon>ui_invchart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\html\yj_new_batch.aspx.cs">
+      <DependentUpon>yj_new_batch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\html\yj_new_batch.aspx.designer.cs">
+      <DependentUpon>yj_new_batch.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

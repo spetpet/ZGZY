@@ -61,7 +61,7 @@ namespace ZGZY.WebUI.admin.ashx
                         //string strwhere = "and 1=1";
                             StringBuilder pkt_getall_sb = new StringBuilder();
                             StringBuilder pkt_count_sb=new StringBuilder();
-                            pkt_getall_sb.Append("select rownum id,ph.create_date_time,pd.pkt_ctrl_nbr,im.season,im.sku_id,im.sku_desc,im.std_pack_qty,ceil(pd.orig_pkt_qty/im.std_pack_qty) pak_qty,pd.orig_pkt_qty,pd.batch_nbr from pkt_hdr ph inner join pkt_dtl pd on pd.pkt_ctrl_nbr=ph.pkt_ctrl_nbr left join item_master im on im.sku_id=pd.sku_id where ph.whse='S00' ");
+                            pkt_getall_sb.Append("select rownum id,ph.create_date_time,pd.pkt_ctrl_nbr,im.season,im.sku_id,im.sku_desc,im.size_desc,im.std_pack_qty,ceil(pd.orig_pkt_qty/im.std_pack_qty) pak_qty,pd.orig_pkt_qty,pd.batch_nbr from pkt_hdr ph inner join pkt_dtl pd on pd.pkt_ctrl_nbr=ph.pkt_ctrl_nbr left join item_master im on im.sku_id=pd.sku_id where ph.whse='S00' ");
                             pkt_getall_sb.Append(strWhere);
                             pkt_getall_sb.Append(" order by im.season,pd.pkt_ctrl_nbr");
                             pkt_count_sb.Append("select count(*),sum(ceil(pd.orig_pkt_qty/im.std_pack_qty)) sum_pak_qty,sum(pd.orig_pkt_qty) sum_orig_pkt_qty from pkt_hdr ph inner join pkt_dtl pd on pd.pkt_ctrl_nbr=ph.pkt_ctrl_nbr left join item_master im on im.sku_id=pd.sku_id where ph.whse='S00' ");
